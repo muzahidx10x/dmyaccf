@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DMYA CCF · SEASON 5</title>
+    <!-- Font Awesome 6 (free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts: Inter + Bengali fallback -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Noto Sans Bengali', sans-serif;
+        }
+
+        :root {
+            --green: #1b5e3f;
+            --green-light: #2e7d5e;
+            --black: #0f1a14;
+            --black-soft: #1e2a24;
+            --white: #f2f7f2;
+            --gray: #c0cfc0;
+            --shadow: 0 20px 30px -10px rgba(0, 40, 20, 0.3);
+            --transition: 0.25s ease;
+        }
+
+        /* dark mode */
+        body.dark {
+            --black: #e1ede1;
+            --black-soft: #c0d4c0;
+            --white: #0e1a12;
+            --gray: #2a3a2a;
+            background: #0b130b;
+            color: #ddd;
+        }
+
+        body {
+            background: var(--white);
+            color: var(--black);
+            transition: background 0.3s, color 0.3s;
+            overflow-x: hidden;
+        }
+
+        /* smooth scroll */
+        html { scroll-behavior: smooth; }
+
+        /* modern scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--gray); }
+        ::-webkit-scrollbar-thumb { background: var(--green); border-radius: 12px; }
+
+        /* layout */
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 25px;
+        }
+
+        /* header / nav */
+        .navbar {
+            background: var(--green);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -0.5px;
+        }
+        .logo span { font-size: 1rem; background: gold; color: black; padding: 3px 8px; border-radius: 40px; margin-left: 8px; }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 0;
+            border-bottom: 2px solid transparent;
+            transition: var(--transition);
+        }
+        .nav-links a:hover { border-bottom-color: gold; }
+
+        .lang-toggle, .theme-toggle {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+
+        /* hero */
+        .hero {
+            background: linear-gradient(120deg, rgba(0,0,0,0.7), rgba(27,94,63,0.7)), url('https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?q=80&w=2070&auto=format&fit=crop') center/cover fixed;
+            min-height: 75vh;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: white;
+            border-bottom: 6px solid var(--green);
+        }
+
+        .hero h1 { font-size: clamp(2.5rem, 10vw, 5.5rem); line-height: 1.1; }
+        .hero h1 small { font-size: 1.8rem; display: block; font-weight: 400; color: gold; }
+
+        /* cards */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 30px;
+            margin: 60px 0;
+        }
+
+        .card {
+            background: var(--black-soft);
+            color: var(--white);
+            border-radius: 32px;
+            padding: 30px 20px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(5px);
+            transition: transform 0.2s;
+        }
+        .card:hover { transform: translateY(-8px); }
+
+        /* countdown */
+        .countdown-box {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: #00000030;
+            border-radius: 60px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .countdown-box span { background: var(--green); padding: 12px 20px; border-radius: 30px; min-width: 90px; }
+
+        /* tables & lists */
+        .score-table, .points-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--black-soft);
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            color: var(--white);
+        }
+        .score-table th, .points-table th {
+            background: var(--green);
+            color: white;
+            font-weight: 700;
+            padding: 18px 8px;
+        }
+        .score-table td, .points-table td {
+            padding: 16px 8px;
+            border-bottom: 1px solid var(--gray);
+            text-align: center;
+        }
+
+        .badge {
+            background: gold;
+            color: black;
+            padding: 4px 10px;
+            border-radius: 40px;
+            font-weight: bold;
+        }
+
+        /* player/team cards */
+        .team-grid, .player-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 25px;
+        }
+        .team-card, .player-card {
+            background: var(--black-soft);
+            border-radius: 40px;
+            padding: 30px 15px;
+            text-align: center;
+            color: var(--white);
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+        .team-card:hover, .player-card:hover { border-color: var(--green); transform: scale(1.02); }
+        .team-logo { width: 100px; height: 100px; background: var(--gray); border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 3rem; }
+
+        /* admin panel */
+        .admin-section {
+            background: var(--black-soft);
+            border-radius: 60px;
+            padding: 40px;
+            margin: 40px 0;
+        }
+        .admin-form input, .admin-form select, .admin-form button {
+            padding: 14px 20px;
+            border-radius: 60px;
+            border: none;
+            margin: 8px;
+            font-weight: 600;
+        }
+        .admin-form button { background: var(--green); color: white; cursor: pointer; }
+
+        /* modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000000aa;
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: var(--white);
+            color: var(--black);
+            padding: 40px;
+            border-radius: 60px;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        /* footer & social */
+        .social a {
+            color: var(--white);
+            background: var(--green);
+            width: 45px; height: 45px;
+            display: inline-flex; border-radius: 50%;
+            justify-content: center; align-items: center;
+            margin: 0 5px; font-size: 1.5rem;
+        }
+
+        /* animations */
+        @keyframes fadeIn { 0%{opacity:0; transform:translateY(15px);} 100%{opacity:1;} }
+        .fade-up { animation: fadeIn 0.6s forwards; }
+
+        /* responsive */
+        @media (max-width: 700px) {
+            .nav-container { flex-direction: column; gap: 15px; }
+            .countdown-box { flex-wrap: wrap; }
+        }
+    </style>
+</head>
+<body>
+    <!-- navigation + admin quick login (inline demo) -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="logo">⚽ DMYA CCF <span>SEASON 5</span></div>
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#teams">Teams</a>
+                <a href="#players">Players</a>
+                <a href="#results">Results</a>
+                <a href="#points">Table</a>
+                <a href="#admin">Admin</a>
+                <a href="#contact">Contact</a>
+                <button class="lang-toggle" id="langBtn">বাংলা</button>
+                <button class="theme-toggle" id="themeBtn"><i class="fas fa-moon"></i></button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HOME section with hero -->
+    <section id="home">
+        <div class="hero">
+            <div class="container">
+                <h1 class="fade-up">DMYA CCF 2026 <small></small></h1>
+                <div class="countdown-box" id="countdown"> <span>02</span> <span>15</span> <span>37</span> <span>22</span> </div>
+                <p style="margin-top:20px; font-size:1.5rem;">পরবর্তী ম্যাচ: বঙ্গবন্ধু একাদশ 🆚 সিলেট সিটি</p>
+            </div>
+        </div>
+
+        <!-- Latest results + upcoming + noticeboard -->
+        <div class="container">
+            <div class="card-grid">
+                <div class="card">
+                    <h2><i class="fas fa-trophy"></i> সর্বশেষ ফলাফল</h2>
+                    <div id="latestResults">🔥 ঢাকা ইউনাইটেড ২–১ চট্টগ্রাম<br>🔥 রাজশাহী ০–০ খুলনা<br></div>
+                </div>
+                <div class="card">
+                    <h2><i class="fas fa-calendar"></i> upcoming fixtures</h2>
+                    <div id="upcomingFixtures">📅 বরিশাল vs রংপুর (শুক্র ২০:০০)<br>📅 কুমিল্লা vs ময়মনসিংহ (শনি ১৮:৩০)</div>
+                </div>
+                <div class="card">
+                    <h2><i class="fas fa-bullhorn"></i> notice board</h2>
+                    <ul style="list-style:none;">
+                        <li>📢 ১৫ এপ্রিল কোয়ার্টার ফাইনাল ড্র</li>
+                        <li>📢 জার্সি কালার নিয়ম আপডেট</li>
+                        <li>📢 ফ্যান মিট ২০ এপ্রিল</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TEAMS page (preview) + dynamic team cards -->
+    <section id="teams" class="container" style="scroll-margin-top: 80px;">
+        <h1 style="font-size:3rem; margin: 40px 0 10px;">দলসমূহ <span style="color:var(--green);">teams</span></h1>
+        <div class="team-grid" id="teamList"></div>
+
+        <!-- team details modal (hidden by default) -->
+        <div id="teamModal" class="modal">
+            <div class="modal-content" id="teamModalBody">
+                <h2 id="modalTeamName">Team name</h2>
+                <p>Coach: <span id="modalCoach"></span></p>
+                <p>Captain: <span id="modalCaptain"></span></p>
+                <p>Matches: <span id="modalMatches"></span> | Wins: <span id="modalWins"></span> | Losses: <span id="modalLosses"></span> | Points: <span id="modalPts"></span></p>
+                <button onclick="closeModal()" style="background:var(--green); color:white; border:none; padding:10px 30px; border-radius:50px;">Close</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- PLAYERS page -->
+    <section id="players" class="container" style="scroll-margin-top: 80px;">
+        <h1 style="font-size:3rem;">খেলোয়াড় <span style="color:var(--green);">players</span></h1>
+        <input type="text" id="playerSearch" placeholder="🔍 search player..." style="width:100%; padding:18px; border-radius:60px; margin:20px 0; border:2px solid var(--green);">
+        <div class="player-grid" id="playerList"></div>
+
+        <!-- player profile modal -->
+        <div id="playerModal" class="modal">
+            <div class="modal-content" id="playerModalBody">
+                <h2 id="playerModalName">name</h2>
+                <p>Team: <span id="playerModalTeam"></span> | Position: <span id="playerModalPos"></span></p>
+                <p>⚽ Goals: <span id="playerModalGoals"></span> | 🎯 Assists: <span id="playerModalAssists"></span></p>
+                <p>🟨 Yellow: <span id="playerModalY"></span> | 🟥 Red: <span id="playerModalR"></span> | 📞 <span id="playerModalPhone"></span></p>
+                <button onclick="closeModal()" style="background:var(--green); color:white; border:none; padding:10px 30px; border-radius:50px;">Close</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- RESULTS page with scoreboard & modal -->
+    <section id="results" class="container" style="scroll-margin-top: 80px;">
+        <h1 style="font-size:3rem;">ম্যাচের ফলাফল <span style="color:var(--green);">results</span></h1>
+        <div class="score-table" style="margin:30px 0;">
+            <table style="width:100%;">
+                <thead><tr><th>তারিখ</th><th>দল A</th><th>স্কোর</th><th>দল B</th><th>বিস্তারিত</th></tr></thead>
+                <tbody id="resultsBody"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- POINTS TABLE auto calc -->
+    <section id="points" class="container" style="scroll-margin-top: 80px;">
+        <h1 style="font-size:3rem;">পয়েন্ট টেবিল <span style="color:var(--green);">standings</span></h1>
+        <div style="overflow-x: auto;">
+            <table class="points-table" id="pointsTable">
+                <thead><tr><th>দল</th><th>ম্যাচ</th><th>জয়</th><th>ড্র</th><th>হার</th><th>গোল পার্থক্য</th><th>পয়েন্ট</th></tr></thead>
+                <tbody id="pointsBody"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- ADMIN PANEL section (simulated with local storage) -->
+    <section id="admin" class="container" style="scroll-margin-top: 80px;">
+        <div class="admin-section">
+            <h2 style="color:goldenrod;">🛠️ ADMIN PANEL (demo)</h2>
+            <p style="margin-bottom:20px;">Add / edit teams & players (client‑side storage).</p>
+            <div class="admin-form">
+                <h3>➕ নতুন দল</h3>
+                <input type="text" id="teamName" placeholder="team name">
+                <input type="text" id="coach" placeholder="coach">
+                <input type="text" id="captain" placeholder="captain">
+                <button onclick="addTeam()">যোগ করুন</button>
+            </div>
+            <div class="admin-form">
+                <h3>➕ নতুন খেলোয়াড়</h3>
+                <input type="text" id="playerName" placeholder="name">
+                <input type="text" id="playerTeam" placeholder="team">
+                <input type="text" id="position" placeholder="position">
+                <input type="number" id="goals" placeholder="goals">
+                <input type="number" id="assists" placeholder="assists">
+                <input type="number" id="yellow" placeholder="yellow cards">
+                <input type="number" id="red" placeholder="red cards">
+                <input type="text" id="phone" placeholder="phone (optional)">
+                <button onclick="addPlayer()">যোগ করুন</button>
+            </div>
+            <p><small>* points table auto‑updates (win=3, draw=1).</small></p>
+        </div>
+    </section>
+
+    <!-- CONTACT + SOCIAL -->
+    <footer id="contact" style="background:var(--green); color:white; padding:50px 0; margin-top:80px;">
+        <div class="container" style="display:flex; flex-wrap:wrap; gap:40px; justify-content:space-between;">
+            <div>
+                <h3>Premier Cup · গোলমাল লিগ</h3>
+                <p>📍 সিলেট স্টেডিয়াম, বাংলাদেশ<br>📞 +880 17xx xxxxxx<br>✉️ info@premiercup.com</p>
+            </div>
+            <div class="social">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+                <a href="#"><i class="fab fa-whatsapp"></i></a>
+            </div>
+        </div>
+        <div class="container" style="text-align:center; margin-top:30px;">© 2026 Premier Cup — all about football</div>
+    </footer>
+
+    <script>
+        // ---------- GLOBAL DATA (demo mode, saved in localStorage) ----------
+        let teams = JSON.parse(localStorage.getItem('premierTeams')) || [
+            { id:1,name:'ঢাকা ইউনাইটেড',coach:'সাইফুল',captain:'জামাল',matches:4,wins:2,draws:1,losses:1,gd:2,pts:7 },
+            { id:2,name:'চট্টগ্রাম',coach:'হাসান',captain:'রিয়াজ',matches:4,wins:1,draws:2,losses:1,gd:0,pts:5 },
+            { id:3,name:'সিলেট সিটি',coach:'মনোয়ার',captain:'কায়েস',matches:3,wins:3,draws:0,losses:0,gd:5,pts:9 },
+            { id:4,name:'রাজশাহী',coach:'রবিন',captain:'রানা',matches:4,wins:0,draws:3,losses:1,gd:-2,pts:3 },
+        ];
+
+        let players = JSON.parse(localStorage.getItem('premierPlayers')) || [
+            { id:1,name:'জামাল ভূঁইয়া',team:'ঢাকা ইউনাইটেড',position:'মিডফিল্ডার',goals:4,assists:2,yellow:1,red:0,phone:'017xxxx'},
+            { id:2,name:'রিয়াজ উদ্দিন',team:'চট্টগ্রাম',position:'ফরোয়ার্ড',goals:6,assists:1,yellow:2,red:0,phone:'018xxxx' },
+            { id:3,name:'কায়েস আহমেদ',team:'সিলেট সিটি',position:'রক্ষণ',goals:0,assists:3,yellow:3,red:1,phone:'019xxxx' },
+            { id:4,name:'রানা',team:'রাজশাহী',position:'গোলরক্ষক',goals:0,assists:0,yellow:0,red:0,phone:''},
+        ];
+
+        let results = [
+            { date:'2026-04-01', teamA:'ঢাকা ইউনাইটেড',scoreA:2,teamB:'চট্টগ্রাম',scoreB:1 },
+            { date:'2026-04-02', teamA:'সিলেট সিটি',scoreA:3,teamB:'রাজশাহী',scoreB:0 },
+            { date:'2026-04-03', teamA:'খুলনা',scoreA:0,teamB:'বরিশাল',scoreB:0 },
+        ];
+
+        // ---------- render functions ----------
+        function renderTeams() {
+            let html='';
+            teams.forEach(t=>{
+                html+=`<div class="team-card" onclick="showTeamDetail(${t.id})">
+                    <div class="team-logo"><i class="fas fa-shield-alt"></i></div>
+                    <h3>${t.name}</h3>
+                    <p>কোচ: ${t.coach} | পয়েন্ট: ${t.pts}</p>
+                </div>`;
+            });
+            document.getElementById('teamList').innerHTML=html;
+        }
+
+        function showTeamDetail(id) {
+            let t = teams.find(x=>x.id==id);
+            if(!t) return;
+            document.getElementById('modalTeamName').innerText = t.name;
+            document.getElementById('modalCoach').innerText = t.coach;
+            document.getElementById('modalCaptain').innerText = t.captain;
+            document.getElementById('modalMatches').innerText = t.matches;
+            document.getElementById('modalWins').innerText = t.wins;
+            document.getElementById('modalLosses').innerText = t.losses;
+            document.getElementById('modalPts').innerText = t.pts;
+            document.getElementById('teamModal').style.display='flex';
+        }
+
+        function renderPlayers() {
+            let html='';
+            players.forEach(p=>{
+                html+=`<div class="player-card" onclick="showPlayerDetail(${p.id})">
+                    <div style="font-size:4rem;"><i class="fas fa-user-circle"></i></div>
+                    <h3>${p.name}</h3>
+                    <p>${p.team} | ${p.position}</p>
+                </div>`;
+            });
+            document.getElementById('playerList').innerHTML=html;
+        }
+
+        function showPlayerDetail(id) {
+            let p = players.find(x=>x.id==id);
+            if(!p) return;
+            document.getElementById('playerModalName').innerText = p.name;
+            document.getElementById('playerModalTeam').innerText = p.team;
+            document.getElementById('playerModalPos').innerText = p.position;
+            document.getElementById('playerModalGoals').innerText = p.goals;
+            document.getElementById('playerModalAssists').innerText = p.assists;
+            document.getElementById('playerModalY').innerText = p.yellow;
+            document.getElementById('playerModalR').innerText = p.red;
+            document.getElementById('playerModalPhone').innerText = p.phone || 'N/A';
+            document.getElementById('playerModal').style.display='flex';
+        }
+
+        function renderResults() {
+            let rows='';
+            results.forEach(r=>{
+                rows+=`<tr><td>${r.date}</td><td>${r.teamA}</td><td><span class="badge">${r.scoreA} – ${r.scoreB}</span></td><td>${r.teamB}</td>
+                <td><button onclick='alert("ম্যাচ বিস্তারিত:\\n${r.teamA} ${r.scoreA}-${r.scoreB} ${r.teamB}\\nতারিখ: ${r.date}")' style="background:var(--green); color:white; border:none; border-radius:30px; padding:6px 12px;">দেখুন</button></td></tr>`;
+            });
+            document.getElementById('resultsBody').innerHTML=rows;
+        }
+
+        function renderPoints() {
+            // auto sort by points desc
+            let sorted = [...teams].sort((a,b)=>b.pts - a.pts);
+            let rows='';
+            sorted.forEach(t=>{
+                rows+=`<tr><td>${t.name}</td><td>${t.matches}</td><td>${t.wins}</td><td>${t.draws}</td><td>${t.losses}</td><td>${t.gd}</td><td><strong>${t.pts}</strong></td></tr>`;
+            });
+            document.getElementById('pointsBody').innerHTML=rows;
+        }
+
+        function closeModal() {
+            document.getElementById('teamModal').style.display='none';
+            document.getElementById('playerModal').style.display='none';
+        }
+
+        // admin functions (simple)
+        function addTeam() {
+            let name = document.getElementById('teamName').value;
+            let coach = document.getElementById('coach').value;
+            let captain = document.getElementById('captain').value;
+            if(!name) return;
+            let newId = teams.length+1;
+            teams.push({id:newId, name, coach, captain, matches:0, wins:0, draws:0, losses:0, gd:0, pts:0});
+            localStorage.setItem('premierTeams', JSON.stringify(teams));
+            renderTeams(); renderPoints();
+        }
+
+        function addPlayer() {
+            let name = document.getElementById('playerName').value;
+            let team = document.getElementById('playerTeam').value;
+            let pos = document.getElementById('position').value;
+            let goals = +document.getElementById('goals').value || 0;
+            let assists = +document.getElementById('assists').value || 0;
+            let y = +document.getElementById('yellow').value || 0;
+            let r = +document.getElementById('red').value || 0;
+            let phone = document.getElementById('phone').value;
+            if(!name||!team) return;
+            let newId = players.length+1;
+            players.push({id:newId, name, team, position:pos, goals, assists, yellow:y, red:r, phone});
+            localStorage.setItem('premierPlayers', JSON.stringify(players));
+            renderPlayers();
+        }
+
+        // search player
+        document.getElementById('playerSearch')?.addEventListener('input', function(e) {
+            let kw = e.target.value.toLowerCase();
+            let filtered = players.filter(p=> p.name.toLowerCase().includes(kw) || p.team.toLowerCase().includes(kw));
+            let html='';
+            filtered.forEach(p=>{
+                html+=`<div class="player-card" onclick="showPlayerDetail(${p.id})"><div style="font-size:4rem;"><i class="fas fa-user-circle"></i></div><h3>${p.name}</h3><p>${p.team}</p></div>`;
+            });
+            document.getElementById('playerList').innerHTML=html || '<p>কোনো খেলোয়াড় নেই</p>';
+        });
+
+        // countdown (static but updates)
+        function updateCountdown() {
+            let d = new Date();
+            let target = new Date('2026-04-10T20:00:00');
+            let diff = target - d;
+            if(diff<0) { document.getElementById('countdown').innerHTML = '🎉 ম্যাচ শুরু!'; return; }
+            let days = Math.floor(diff/(1000*60*60*24));
+            let hrs = Math.floor((diff/(1000*60*60))%24);
+            let min = Math.floor((diff/(1000*60))%60);
+            let sec = Math.floor((diff/1000)%60);
+            document.getElementById('countdown').innerHTML = `<span>${days}d</span> <span>${hrs}h</span> <span>${min}m</span> <span>${sec}s</span>`;
+        }
+        setInterval(updateCountdown,1000);
+
+        // theme & lang (simple)
+        document.getElementById('themeBtn').onclick = ()=>{
+            document.body.classList.toggle('dark');
+        };
+        document.getElementById('langBtn').onclick = function(){
+            alert('বাংলা / English টগল (demo)');
+        }
+
+        // initial render
+        renderTeams(); renderPlayers(); renderResults(); renderPoints();
+
+        // modal outside click
+        window.onclick = (e)=>{
+            if(e.target.classList.contains('modal')) closeModal();
+        }
+
+        // simulate match results update via admin (manual demo, but we can add push)
+        // extra: auto calc points from matches? in full version would loop; but for demo static.
+    </script>
+</body>
+</html>
